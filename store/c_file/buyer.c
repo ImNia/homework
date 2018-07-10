@@ -12,7 +12,7 @@ int store_select_buyer()
 	return store;	
 }
 
-void buy(int *content_buyer, int *store)
+int buy(int *content_buyer, int *store)
 {
 	int store_b = store_select_buyer();
 	if(*content_buyer > store[store_b]){
@@ -22,4 +22,5 @@ void buy(int *content_buyer, int *store)
 		store[store_b] -= *content_buyer;
 		*content_buyer = 0;
 	}
+    return store_b;
 }

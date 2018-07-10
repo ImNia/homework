@@ -13,9 +13,9 @@ int init_content()
 	return content;
 }
 
-void working(int *store)
+int working(int *store, int *number_store)
 {
-	int number_store = store_selection();
 	int content_store = init_content();
-	store[number_store] += content_store;
+	store[*number_store] += content_store;
+    return content_store;
 }
