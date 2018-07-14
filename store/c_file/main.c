@@ -55,7 +55,6 @@ void* buy_main(void *args)
                 break;
         }
         printf("Покупатель %d забрал из магазина %d: его лимит %d\n", pthread_self(), store_b + 1, *content_buyer);
-//        print(args);
         sleep(3);
     }
     return 0;
@@ -63,7 +62,6 @@ void* buy_main(void *args)
 
 void* loader_main(void *args)
 {
-//    int *number_store = (int*)malloc(1 * sizeof(int));
     int number_store = 6;
     int content;
 
@@ -125,14 +123,12 @@ int main()
     pthread_create(&thread_loader, NULL, loader_main, (void *) store);
     pthread_create(&thread_buy_1, NULL, buy_main, (void *) store);
     pthread_create(&thread_buy_2, NULL, buy_main, (void *) store);
-//    pthread_create(&thread_buy_3, NULL, buy_main, (void *) store);
+    pthread_create(&thread_buy_3, NULL, buy_main, (void *) store);
 
     pthread_join(thread_buy_1, (void**)&status);
     pthread_join(thread_buy_2, (void**)&status);
-//    pthread_join(thread_buy_3, (void**)&status);
+    pthread_join(thread_buy_3, (void**)&status);
     pthread_cancel(thread_loader);
-
-//    printf("joined with address %d\n", status);
 
     return 0;
 }
