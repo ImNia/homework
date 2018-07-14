@@ -5,6 +5,6 @@
 
 void init_buyer(int *content_buyer);
 int store_select_buyer();
-int buy(int *content_store, int *store);
+void buy(int *content_store, int *store, int store_b);
 
 #endif

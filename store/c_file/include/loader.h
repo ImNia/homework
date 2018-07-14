@@ -5,6 +5,6 @@
 
 int store_selection();
 int init_content();
-int working(int *store, int *number_store);
+int working(int *store, int number_store);
 
 #endif
