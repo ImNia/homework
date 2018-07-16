@@ -41,21 +41,6 @@ void* buy_main(void *arg)
             }else{
                 continue;
             }
-/*
-    if(args->num_b[0] != 0){
-        s_num = args->num_b[0];
-        args->num_b[0] = 0;
-    }else{
-        if(args->num_b[1] != 0){
-            s_num = args->num_b[1];
-            args->num_b[1] = 0;
-        }else{
-            if(args->num_b[2] != 0){
-                s_num = args->num_b[2];
-                args->num_b[2] = 0;
-            }
-        }
-    }*/
         }
     }
 
