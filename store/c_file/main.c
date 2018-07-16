@@ -5,6 +5,8 @@
 #include "./c_file/include/loader.h"
 #include "./c_file/include/buyer.h"
 
+#define COUNT 2
+
 pthread_mutex_t mutex1;
 pthread_mutex_t mutex2;
 pthread_mutex_t mutex3;
@@ -13,7 +15,7 @@ pthread_mutex_t mutex5;
 
 struct store_number{
     int *store;
-    int num_b[2]; 
+    int num_b[COUNT]; 
 };
 
 void print(int *store)
@@ -28,8 +30,37 @@ void* buy_main(void *arg)
 {
     struct store_number *args = (struct store_number*) arg;
     int *content_buyer = (int*)malloc(1 * sizeof(int));
+
+    int s_num = -1;
+    while(s_num == -1){
+        for(int i = 0; i <= COUNT; i++){
+            if(args->num_b[i] != 0){
+                s_num = args->num_b[i];
+                args->num_b[i] = 0;
+                break;
+            }else{
+                continue;
+            }
+/*
+    if(args->num_b[0] != 0){
+        s_num = args->num_b[0];
+        args->num_b[0] = 0;
+    }else{
+        if(args->num_b[1] != 0){
+            s_num = args->num_b[1];
+            args->num_b[1] = 0;
+        }else{
+            if(args->num_b[2] != 0){
+                s_num = args->num_b[2];
+                args->num_b[2] = 0;
+            }
+        }
+    }*/
+        }
+    }
+
     init_buyer(content_buyer);
-    printf("Лимит покупатель %d : %d\n", pthread_self(), *content_buyer);
+    printf("Лимит покупатель %d : %d\n", s_num, *content_buyer);
 
     while(*content_buyer > 0){
       	int store_b = store_select_buyer();
@@ -60,7 +91,7 @@ void* buy_main(void *arg)
                 pthread_mutex_unlock(&mutex5);
                 break;
         }
-        printf("Покупатель %d забрал из магазина %d: его лимит %d\n", pthread_self(), store_b + 1, *content_buyer);
+        printf("Покупатель %d забрал из магазина %d: его лимит %d\n", s_num, store_b + 1, *content_buyer);
         sleep(3);
     }
     return 0;
@@ -117,8 +148,8 @@ int main()
 
     init_store(help->store);
     print(help->store);
-    for(int i = 0; i < 3; i++){
-        help->num_b[i] = i;
+    for(int i = 0; i <= COUNT; i++){
+        help->num_b[i] = i + 1;
     }
 
     pthread_mutex_init(&mutex1, NULL);
