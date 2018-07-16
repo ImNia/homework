@@ -11,6 +11,11 @@ pthread_mutex_t mutex3;
 pthread_mutex_t mutex4;
 pthread_mutex_t mutex5;
 
+struct store_number{
+    int *store;
+    int num_b[2]; 
+};
+
 void print(int *store)
 {
     for(int i = 0; i < 5; i++){
@@ -19,7 +24,7 @@ void print(int *store)
     printf("\n");
 }
 
-void* buy_main(void *args)
+void* buy_main(struct store_number args)
 {
     int *content_buyer = (int*)malloc(1 * sizeof(int));
     init_buyer(content_buyer);
@@ -30,27 +35,27 @@ void* buy_main(void *args)
         switch(store_b){
             case 0:
                 pthread_mutex_lock(&mutex1);
-                buy(content_buyer, args, store_b);
+                buy(content_buyer, args.store, store_b);
                 pthread_mutex_unlock(&mutex1);
                 break;
             case 1:
                 pthread_mutex_lock(&mutex2);
-                buy(content_buyer, args, store_b);
+                buy(content_buyer, args.store, store_b);
                 pthread_mutex_unlock(&mutex2);
                 break;
             case 2:
                 pthread_mutex_lock(&mutex3);
-                buy(content_buyer, args, store_b);
+                buy(content_buyer, args.store, store_b);
                 pthread_mutex_unlock(&mutex3);
                 break;
             case 3:
                 pthread_mutex_lock(&mutex4);
-                buy(content_buyer, args, store_b);
+                buy(content_buyer, args.store, store_b);
                 pthread_mutex_unlock(&mutex4);
                 break;
             case 4:
                 pthread_mutex_lock(&mutex5);
-                buy(content_buyer, args, store_b);
+                buy(content_buyer, args.store, store_b);
                 pthread_mutex_unlock(&mutex5);
                 break;
         }
@@ -60,7 +65,7 @@ void* buy_main(void *args)
     return 0;
 }
 
-void* loader_main(void *args)
+void* loader_main(struct store_number args)
 {
     int number_store = 6;
     int content;
@@ -70,43 +75,48 @@ void* loader_main(void *args)
         switch(number_store){
             case 0:
                 pthread_mutex_lock(&mutex1);
-                content = working(args, number_store);
+                content = working(args.store, number_store);
                 pthread_mutex_unlock(&mutex1);
                 break;
             case 1:
                 pthread_mutex_lock(&mutex2);
-                content = working(args, number_store);
+                content = working(args.store, number_store);
                 pthread_mutex_unlock(&mutex2);
                 break;
             case 2:
                 pthread_mutex_lock(&mutex3);
-                content = working(args, number_store);
+                content = working(args.store, number_store);
                 pthread_mutex_unlock(&mutex3);
                 break;
             case 3:
                 pthread_mutex_lock(&mutex4);
-                content = working(args, number_store);
+                content = working(args.store, number_store);
                 pthread_mutex_unlock(&mutex4);
                 break;
             case 4:
                 pthread_mutex_lock(&mutex5);
-                content = working(args, number_store);
+                content = working(args.store, number_store);
                 pthread_mutex_unlock(&mutex5);
                 break;
             default :
                 printf("???\n");
         }
         printf("Погрузчик положил в магазин %d: столько %d\n", number_store + 1, content);
-        print(args);
+        print(args.store);
         sleep(3);
     }
 }
 
 int main()
 {
-    int *store = (int*)malloc(5 * sizeof(int));
-    init_store(store);
-    print(store);
+    struct store_number *help;
+    help->store = (int*)malloc(5 * sizeof(int));
+
+    init_store(help->store);
+    print(help->store);
+    for(int i = 0; i < 3; i++){
+        help->num_b[i] = i;
+    }
 
     pthread_mutex_init(&mutex1, NULL);
     pthread_mutex_init(&mutex2, NULL);
@@ -120,10 +130,10 @@ int main()
     pthread_t thread_loader;
 
     int status;
-    pthread_create(&thread_loader, NULL, loader_main, (void *) store);
-    pthread_create(&thread_buy_1, NULL, buy_main, (void *) store);
-    pthread_create(&thread_buy_2, NULL, buy_main, (void *) store);
-    pthread_create(&thread_buy_3, NULL, buy_main, (void *) store);
+    pthread_create(&thread_loader, NULL, loader_main, help);
+    pthread_create(&thread_buy_1, NULL, buy_main, help);
+    pthread_create(&thread_buy_2, NULL, buy_main, help);
+    pthread_create(&thread_buy_3, NULL, buy_main, help);
 
     pthread_join(thread_buy_1, (void**)&status);
     pthread_join(thread_buy_2, (void**)&status);
