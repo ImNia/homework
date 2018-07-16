@@ -24,8 +24,9 @@ void print(int *store)
     printf("\n");
 }
 
-void* buy_main(struct store_number args)
+void* buy_main(void *arg)
 {
+    struct store_number *args = (struct store_number*) arg;
     int *content_buyer = (int*)malloc(1 * sizeof(int));
     init_buyer(content_buyer);
     printf("Лимит покупатель %d : %d\n", pthread_self(), *content_buyer);
@@ -35,27 +36,27 @@ void* buy_main(struct store_number args)
         switch(store_b){
             case 0:
                 pthread_mutex_lock(&mutex1);
-                buy(content_buyer, args.store, store_b);
+                buy(content_buyer, args->store, store_b);
                 pthread_mutex_unlock(&mutex1);
                 break;
             case 1:
                 pthread_mutex_lock(&mutex2);
-                buy(content_buyer, args.store, store_b);
+                buy(content_buyer, args->store, store_b);
                 pthread_mutex_unlock(&mutex2);
                 break;
             case 2:
                 pthread_mutex_lock(&mutex3);
-                buy(content_buyer, args.store, store_b);
+                buy(content_buyer, args->store, store_b);
                 pthread_mutex_unlock(&mutex3);
                 break;
             case 3:
                 pthread_mutex_lock(&mutex4);
-                buy(content_buyer, args.store, store_b);
+                buy(content_buyer, args->store, store_b);
                 pthread_mutex_unlock(&mutex4);
                 break;
             case 4:
                 pthread_mutex_lock(&mutex5);
-                buy(content_buyer, args.store, store_b);
+                buy(content_buyer, args->store, store_b);
                 pthread_mutex_unlock(&mutex5);
                 break;
         }
@@ -65,8 +66,9 @@ void* buy_main(struct store_number args)
     return 0;
 }
 
-void* loader_main(struct store_number args)
+void* loader_main(void *arg)
 {
+    struct store_number *args = (struct store_number*) arg;
     int number_store = 6;
     int content;
 
@@ -75,34 +77,34 @@ void* loader_main(struct store_number args)
         switch(number_store){
             case 0:
                 pthread_mutex_lock(&mutex1);
-                content = working(args.store, number_store);
+                content = working(args->store, number_store);
                 pthread_mutex_unlock(&mutex1);
                 break;
             case 1:
                 pthread_mutex_lock(&mutex2);
-                content = working(args.store, number_store);
+                content = working(args->store, number_store);
                 pthread_mutex_unlock(&mutex2);
                 break;
             case 2:
                 pthread_mutex_lock(&mutex3);
-                content = working(args.store, number_store);
+                content = working(args->store, number_store);
                 pthread_mutex_unlock(&mutex3);
                 break;
             case 3:
                 pthread_mutex_lock(&mutex4);
-                content = working(args.store, number_store);
+                content = working(args->store, number_store);
                 pthread_mutex_unlock(&mutex4);
                 break;
             case 4:
                 pthread_mutex_lock(&mutex5);
-                content = working(args.store, number_store);
+                content = working(args->store, number_store);
                 pthread_mutex_unlock(&mutex5);
                 break;
             default :
                 printf("???\n");
         }
         printf("Погрузчик положил в магазин %d: столько %d\n", number_store + 1, content);
-        print(args.store);
+        print(args->store);
         sleep(3);
     }
 }
@@ -110,6 +112,7 @@ void* loader_main(struct store_number args)
 int main()
 {
     struct store_number *help;
+    help = (struct store_number*)malloc(sizeof(*help));
     help->store = (int*)malloc(5 * sizeof(int));
 
     init_store(help->store);
