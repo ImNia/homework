@@ -6,24 +6,23 @@
 int main()
 {
 	struct sockaddr_in client_addr;
-	char buf[10];
+	int buf[10];
+	for(int i = 0; i < 10; i++)
+		buf[i] = i;
 
 	int sock_fd = socket(AF_INET, SOCK_STREAM, 0);
 	client_addr.sin_family = AF_INET;
-	client_addr.sin_port = htons(100);
-	client_addr.sin_addr.s_addr = htons(INADDR_LOOPBACK);
+	client_addr.sin_port = htons(5000);
+	client_addr.sin_addr.s_addr = htonl(INADDR_LOOPBACK);
 	connect(sock_fd, (struct sockaddr*)&client_addr, sizeof(client_addr));
-//	recv(sock_fd, buf, sizeof(buf), NULL);
-	buf[0] = 'H';	
 	for(int i = 0; i < 10; i++)
-		printf("%c", buf[i]);
+		printf("%d", buf[i]);
 	printf("\n");
-	send(sock_fd, buf, sizeof(buf), MSG_WAITALL);
-	recv(sock_fd, buf, sizeof(buf), MSG_WAITALL);
+	send(sock_fd, buf, sizeof(buf), 0);
+	recv(sock_fd, buf, sizeof(buf), 0);
 	for(int i = 0; i < 10; i++)
-		printf("%c", buf[i]);
+		printf("%d", buf[i]);
 	printf("\n");
-	perror(NULL);
 	close(sock_fd);
 
 	return 0;
