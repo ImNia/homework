@@ -10,9 +10,12 @@ int main()
 	bind(sock_fd, (struct sockaddr*)&serv_addr, sizeof(serv_addr));
 	listen(sock_fd, 5);	
 	accept(sock_fd, NULL, NULL);
-	recv(sock_fd, buf, sizeof(buf), MSG_WAITALL);
+	recv(sock_fd, buf, sizeof(buf), MSG_PEEK);
 	buf[1] = 'e';
-	send(sock_fd, buf, sizeof(buf), MSG_WAITALL);
+	for(int i = 0; i < 10; i++)
+		printf("%c", buf[i]);
+	printf("\n");
+	send(sock_fd, buf, sizeof(buf), MSG_PEEK);
 	close(sock_fd);
 
 	return 0;
