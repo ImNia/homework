@@ -15,6 +15,7 @@ int main()
 	client_addr.sin_port = htons(5000);
 	client_addr.sin_addr.s_addr = htonl(INADDR_LOOPBACK);
 	connect(sock_fd, (struct sockaddr*)&client_addr, sizeof(client_addr));
+	printf("%d\n", sock_fd);
 	for(int i = 0; i < 10; i++)
 		printf("%d", buf[i]);
 	printf("\n");
@@ -23,7 +24,7 @@ int main()
 	for(int i = 0; i < 10; i++)
 		printf("%d", buf[i]);
 	printf("\n");
-	close(sock_fd);
+	shutdown(sock_fd, 0);
 
 	return 0;
 }
