@@ -11,7 +11,7 @@ int main()
 	int buf[10];
 	for(int i = 0; i < 10; i++)
 		buf[i] = i;
-	int addrlen = sizeof(buf);
+	int *addrlen;
 
 	int sock_fd = socket(AF_INET, SOCK_DGRAM, 0);
 
@@ -21,16 +21,16 @@ int main()
 	perror("Setsockopt");	
 */
 	client_addr.sin_family = AF_INET;
-	client_addr.sin_port = htonl(5000);
+	client_addr.sin_port = htons(5000);
 	client_addr.sin_addr.s_addr = htonl(INADDR_LOOPBACK);
-	bind(sock_fd, (struct sockaddr*)&client_addr, sizeof(client_addr));
-	perror("bind: ");
-	sendto(sock_fd, buf, sizeof(buf), 0, (struct sockaddr*)&serv_addr, sizeof(serv_addr));
+	
+	sendto(sock_fd, buf, sizeof(buf), 0, (struct sockaddr*)&client_addr, sizeof(client_addr));
+
 	perror("Sendto: ");
 	for(int i = 0; i < 10; i++)
 		printf("%d", buf[i]);
 	printf("\n");
-//	recvfrom(sock_fd, buf, sizeof(buf), 0, (struct sockaddr*)&serv_addr, addrlen);
+//	recvfrom(sock_fd, buf, sizeof(buf), 0, (struct sockaddr*)&client_addr, (socklen_t *)&addrlen);
 	recvfrom(sock_fd, buf, sizeof(buf), 0, NULL, NULL);
 	perror("Recvfrom");
 	for(int i = 0; i < 10; i++)
