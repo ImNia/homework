@@ -6,25 +6,22 @@
 int main()
 {
 	struct sockaddr_in serv_addr;
-	struct sockaddr_in client_addr;
 
 	int buf[10];
 	for(int i = 0; i < 10; i++)
 		buf[i] = 0;
-	int *addrlen;
+	int addrlen = sizeof(serv_addr);
 	
 	int sock_fd = socket(AF_INET, SOCK_DGRAM, 0);
 	perror("Setsockopt");
-/*	int opt = 1;
-	if(setsockopt(sock_fd, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt)) == -1)
-*/
+	
 	serv_addr.sin_family = AF_INET;
 	serv_addr.sin_port = htons(5000);
 	serv_addr.sin_addr.s_addr = htonl(INADDR_LOOPBACK);
 	bind(sock_fd, (struct sockaddr*)&serv_addr, sizeof(serv_addr));
 	perror("Bind");
-//	recvfrom(sock_fd, buf, sizeof(buf), 0, (struct sockaddr*)&serv_addr, (socklen_t *)&addrlen);
-	recvfrom(sock_fd, buf, sizeof(buf), 0, NULL, NULL);
+	recvfrom(sock_fd, buf, sizeof(buf), 0, (struct sockaddr*)&serv_addr, &addrlen);
+//	recvfrom(sock_fd, buf, sizeof(buf), 0, NULL, NULL);
 	perror("Recvfrom");
 	for(int i = 0; i < 10; i++){
 		if(buf[i] % 2 == 0)
@@ -32,7 +29,7 @@ int main()
 		printf("%d", buf[i]);
 	}
 	printf("\n");
-	sendto(sock_fd, buf, sizeof(buf), 0, (struct sockaddr*)&serv_addr, sizeof(serv_addr));
+	sendto(sock_fd, buf, sizeof(buf), 0, (struct sockaddr*)&serv_addr, addrlen);
 
 	perror("Sendto");
 
