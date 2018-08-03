@@ -4,13 +4,14 @@
 #include <netinet/in.h>
 
 int main()
-{
+
 	struct sockaddr_in serv_addr;
+	struct sockaddr_in client;
 
 	int buf[10];
 	for(int i = 0; i < 10; i++)
 		buf[i] = 0;
-	int addrlen = sizeof(serv_addr);
+	socklen_t addrlen = sizeof(client);
 	
 	int sock_fd = socket(AF_INET, SOCK_DGRAM, 0);
 	perror("Setsockopt");
@@ -20,7 +21,7 @@ int main()
 	serv_addr.sin_addr.s_addr = htonl(INADDR_LOOPBACK);
 	bind(sock_fd, (struct sockaddr*)&serv_addr, sizeof(serv_addr));
 	perror("Bind");
-	recvfrom(sock_fd, buf, sizeof(buf), 0, (struct sockaddr*)&serv_addr, &addrlen);
+	recvfrom(sock_fd, buf, sizeof(buf), 0, (struct sockaddr*)&client, &addrlen);
 //	recvfrom(sock_fd, buf, sizeof(buf), 0, NULL, NULL);
 	perror("Recvfrom");
 	for(int i = 0; i < 10; i++){
@@ -29,7 +30,7 @@ int main()
 		printf("%d", buf[i]);
 	}
 	printf("\n");
-	sendto(sock_fd, buf, sizeof(buf), 0, (struct sockaddr*)&serv_addr, addrlen);
+	sendto(sock_fd, buf, sizeof(buf), 0, (struct sockaddr*)&client, addrlen);
 
 	perror("Sendto");
 
